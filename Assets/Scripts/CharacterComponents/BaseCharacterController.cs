@@ -12,7 +12,7 @@ public class BaseCharacterController : MonoBehaviour
     [SerializeField] private LayerMask wallLayers;
     //[SerializeField] private BaseWeapon currentWeapon
 
-    private Vector3 targetPosition; //target position to move to
+    [HideInInspector] public Vector3 targetPosition; //target position to move to
 
 
 
@@ -24,32 +24,35 @@ public class BaseCharacterController : MonoBehaviour
     [SerializeField] private float checkIncrement;
     [SerializeField] private int maxIncrements;
     [SerializeField] private float size;
-    [SerializeField] private GameObject target;
+    public GameObject target;
 
 
     bool hiding;
 
 
-    private void Update()
+    public virtual void Update()
     {
         Move();
 
         //Debug(hiding)
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(target != null)
         {
-            hiding = !hiding;
-        }
-        
-        if (hiding)
-        {
-            targetPosition = Hide(target.transform.position);
-            pathfindingController.stoppingDistance = 0.5f;
-        }
-        else
-        {
-            targetPosition = target.transform.position;
-            pathfindingController.stoppingDistance = 3.5f;
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                hiding = !hiding;
+            }
+
+            if (hiding)
+            {
+                targetPosition = Hide(target.transform.position);
+                pathfindingController.stoppingDistance = 0.5f;
+            }
+            else
+            {
+                targetPosition = target.transform.position;
+                pathfindingController.stoppingDistance = 3.5f;
+            }
         }
 
         //TODO: if possible, attack.
