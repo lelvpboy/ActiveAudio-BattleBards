@@ -1,49 +1,59 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : MonoBehaviour, IPlayerStats
 {
-    public static PlayerManager instance;
+    //Note: Should I turn this into an interface?
+    public static PlayerManager Instance { get; private set; }
     
-    [SerializeField] private float speed;
-    [SerializeField] private float health;
+    [SerializeField] private float speed = 10f;
+    [SerializeField] private float health = 100f;
     [SerializeField] private float strength;
-    [SerializeField] private string currentWeapon;
+    
+    private string _currentWeapon;
+    
+    public float Speed => speed;
+    public float Health => health;
+    public float Strength => strength;
+    
+    public event Action OnStatsChanged;
 
     void Awake()
     {
         //Generic instance setup
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
             Destroy(gameObject);
         }
     }
-    
-    //Speed
-    public float GetSpeed()
+
+    public void Heal(float amount)
     {
-        return speed;
+        if (health + amount > 100)
+        {
+            //If the health will be greater than 100
+            health = 100;
+        }
+        else
+        {
+            //Add the health
+            health += amount;
+        }
+
+        OnStatsChanged?.Invoke();
     }
 
-    //Health
-    public float GetHealth()
+    public void Damage(float amount)
     {
-        return health;
-    }
-    
-    public void HealPlayer(float amount)
-    {
-        health += amount;
-    }
-
-    public void DamagePlayer(float amount)
-    {
+        //TODO: If health <= 0, KillPlayer()
         health -= amount;
+        OnStatsChanged?.Invoke();
     }
 
     public void KillPlayer()
@@ -52,15 +62,10 @@ public class PlayerManager : MonoBehaviour
         Debug.LogWarning("KillPlayer() not setup yet.");
     }
     
-    //Weapon + Health
-    public float GetStrenght()
-    {
-        return strength;
-    }
-    
     public void SetWeapon(string newWeapon)
     {
-        currentWeapon = newWeapon;
+        _currentWeapon = newWeapon;
+        OnStatsChanged?.Invoke();
         
         //TODO: Need to check if the weapon exists
     }
