@@ -29,6 +29,11 @@ public class BaseCharacterController : MonoBehaviour
 
     bool hiding;
 
+    public virtual void Hide()
+    {
+        hiding = !hiding;
+    }
+
 
     public virtual void Update()
     {
