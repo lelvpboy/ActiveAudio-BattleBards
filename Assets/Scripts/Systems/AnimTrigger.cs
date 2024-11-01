@@ -4,11 +4,20 @@ using UnityEngine;
 
 public class AnimTrigger : MonoBehaviour
 {
-    public Animator animator;
-    public string triggerName;
+    [SerializeField] private Trigger[] triggers;
 
     public void Trigger()
     {
-        animator.SetTrigger(triggerName);
+        foreach(Trigger trigger in triggers)
+        {
+            trigger.animator.SetTrigger(trigger.triggerName);
+        }
     }
+}
+
+[System.Serializable]
+public class Trigger
+{
+    public Animator animator;
+    public string triggerName;
 }

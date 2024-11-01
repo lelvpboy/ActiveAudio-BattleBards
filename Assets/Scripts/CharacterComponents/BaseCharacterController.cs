@@ -5,11 +5,12 @@ using UnityEngine.AI;
 
 public class BaseCharacterController : MonoBehaviour
 {
-    [SerializeField] private float health;
-    [SerializeField] private NavMeshAgent pathfindingController;
-    [SerializeField] private float strength;
-    [SerializeField] private float attackingDistance;
-    [SerializeField] private LayerMask wallLayers;
+    [Header("Base Variables")]
+    public float maxHealth;
+    public NavMeshAgent pathfindingController;
+    public float strength;
+    public float attackingDistance;
+    public LayerMask wallLayers;
     //[SerializeField] private BaseWeapon currentWeapon
 
     [HideInInspector] public Vector3 targetPosition; //target position to move to
@@ -19,48 +20,63 @@ public class BaseCharacterController : MonoBehaviour
     //hiding variables
     //Variables will be replaced by others in future.
     [Header("Hiding Variables")]
-    [SerializeField] private int rays;
-    [SerializeField] private float maxRayDist;
-    [SerializeField] private float checkIncrement;
-    [SerializeField] private int maxIncrements;
+    [SerializeField] private int rays = 12;
+    [SerializeField] private float maxRayDist = 30;
+    [SerializeField] private float checkIncrement = 0.5f;
+    [SerializeField] private int maxIncrements = 12;
     [SerializeField] private float size;
-    public GameObject target;
+    
+    
+    //nonEditable variables:
+    
+    [HideInInspector] public GameObject target;
+    [HideInInspector] public int state;
+    //[HideInInspector] 
+    public float currentHealth;
 
 
     bool hiding;
 
-    public virtual void Hide()
+    public virtual void ChangeState(int _state)
     {
-        hiding = !hiding;
+        state = _state;
     }
 
 
     public virtual void Update()
     {
-        Move();
-
         //Debug(hiding)
 
-        if(target != null)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                hiding = !hiding;
-            }
+        //if(target != null)
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Space))
+        //    {
+        //        hiding = !hiding;
+        //    }
+        //
+        //    if (hiding)
+        //    {
+        //        targetPosition = Hide(target.transform.position);
+        //        pathfindingController.stoppingDistance = 0.5f;
+        //    }
+        //    else
+        //    {
+        //        targetPosition = target.transform.position;
+        //        pathfindingController.stoppingDistance = 3.5f;
+        //    }
+        //}
 
-            if (hiding)
-            {
-                targetPosition = Hide(target.transform.position);
-                pathfindingController.stoppingDistance = 0.5f;
-            }
-            else
-            {
-                targetPosition = target.transform.position;
-                pathfindingController.stoppingDistance = 3.5f;
-            }
+        if (state == -1)
+        {
+            targetPosition = Hide(target.transform.position);
+            pathfindingController.stoppingDistance = 0.5f;
+        }
+        else
+        {
+            targetPosition = target.transform.position;
         }
 
-        //TODO: if possible, attack.
+            //TODO: if possible, attack.
     }
 
     public virtual void Move()
@@ -70,17 +86,33 @@ public class BaseCharacterController : MonoBehaviour
 
     public virtual void Attack()
     {
-        //TODO: attack using currentWeapon (weapon script to handle weapon functionality)
+
     }
 
     public void ChangeHP(float amount)
     {
-        health += amount;
+        currentHealth += amount;
+        if(currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
     }
 
     public void SetHP(float amount)
     {
-        health = amount;
+        currentHealth = amount;
+    }
+
+    public virtual bool CanSeeTarget(float range)
+    {
+        bool cansee = true;
+        Vector3 CheckDir = targetPosition - transform.position;
+        if(Physics.Raycast(transform.position, CheckDir, range, wallLayers))
+        {
+            cansee = false;
+        }
+
+        return cansee;
     }
 
     public virtual Vector3 Hide(Vector3 target)
