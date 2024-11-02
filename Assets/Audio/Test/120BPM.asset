@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d74126067774c554a926151fbc942500, type: 3}
   m_Name: 120BPM
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: e2f39f8d7b6d622428bdb26c899f561a, type: 3}
+  clip: {fileID: 8300000, guid: ee56db65a363e43418ed589f2c104201, type: 3}
   bpm: 120

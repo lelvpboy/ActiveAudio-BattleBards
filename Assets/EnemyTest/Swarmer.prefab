@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4201353576810457437}
   m_Layer: 0
   m_Name: Swarmer
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,9 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e11b1f80f5623384f958f768bbb3ac52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
+  maxHealth: 0
   pathfindingController: {fileID: 4201353576810457437}
-  strength: 0
+  score: 0
   attackingDistance: 0
   wallLayers:
     serializedVersion: 2
@@ -125,6 +125,8 @@ MonoBehaviour:
   maxIncrements: 12
   size: 0.5
   target: {fileID: 0}
+  state: 0
+  currentHealth: 0
 --- !u!195 &4201353576810457437
 NavMeshAgent:
   m_ObjectHideFlags: 0

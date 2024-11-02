@@ -10,83 +10,86 @@ using UnityEngine.Animations;
 //TODO: I am unable to make animations work. Sprites dont support the old input system. I cannot figure out the new input system.
 public class PlayerController : MonoBehaviour
 {
-    private IPlayerStats _playerStats;
-    [SerializeField] private GameObject playerSprite;
+    public float speed;
+    public int hp;
+    public float invince;
+    public float dodgeSpeed;
+    public float dashTime;
+
+    float dashLeft;
 
     private string targetAnimation = "isIdle";
     private string newTargetAnimation = "isIdle";
 
     private Animator animator;
     private Vector2 inputDirection;
+    private Rigidbody rb;
+
+    float x;
+    float y;
 
 
     private void Start()
     {
-        animator = playerSprite.GetComponent<Animator>();
-
-        _playerStats = PlayerManager.Instance;
+        rb = GetComponent<Rigidbody>();
+        hp = 3;
     }
 
     void Update()
     {
-        MovePlayer();
+        dashLeft -= Time.deltaTime;
+
+        invince -= Time.deltaTime;
+
+        x = Input.GetAxis("Horizontal");
+        y = Input.GetAxis("Vertical");
+
+        if (Input.GetKeyDown(KeyCode.Space) && dashLeft <= 0)
+        {
+            rb.velocity = new Vector3(x, 0, y) * (dodgeSpeed) * Time.fixedDeltaTime;
+            dashLeft = dashTime;
+
+            invince = 0.5f;
+
+            //if (FindObjectOfType<MusicManager>().WithinBeatRange(0.5f))
+            //{
+            //    invince = 1f;
+            //}
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if(dashLeft <= 0)
+        {
+            MovePlayer();
+        }
     }
 
     void MovePlayer()
     {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
+        Vector3 movement = new Vector3(x, 0, y) * (speed * Time.fixedDeltaTime);
 
-        Vector3 movement = new Vector3(x, 0, y) * (_playerStats.Speed * Time.deltaTime);
-
-        transform.Translate(movement, Space.World);
-
-        PlayAnimation(x, y);
+        rb.velocity = movement;
     }
 
-    private void PlayAnimation(float x, float y)
+    public void Die()
     {
-        //Check the direction and play the animation
-        if (y > 0) newTargetAnimation = "isWalkingUp";
-        else if (y < 0) newTargetAnimation = "isWalkingDown";
-        else if (x > 0) newTargetAnimation = "isWalkingRight";
-        else if (x < 0) newTargetAnimation = "isWalkingLeft";
-        else newTargetAnimation = "isIdle";
-        
-        animator.Play(newTargetAnimation, 0, 0f);
-        
-        // //Reset all directions
-        // if (targetAnimation != newTargetAnimation)
-        // {
-        //     //Reset all directions
-        //     animator.SetBool("isWalkingUp", false);
-        //     animator.SetBool("isWalkingDown", false);
-        //     animator.SetBool("isWalkingLeft", false);
-        //     animator.SetBool("isWalkingRight", false);
-        //     animator.SetBool("isIdle", false);
-        //     
-        //     //Set the new animation
-        //     targetAnimation = newTargetAnimation;
-        //     animator.SetBool(targetAnimation, true);
-        // }
-        // else
-        // {
-        //     //Temporary, do nothing
-        // }
-
+        FindObjectOfType<UIManager>().End();
     }
 
-    void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("EnemyWeapon"))
+        if (other.gameObject.CompareTag("EHitbox") && invince <= 0)
         {
             //TODO: Make this work
-            Debug.Log("Collided with EnemyWeapon");
-        }
-        else if (other.gameObject.CompareTag("Health"))
-        {
-            Debug.Log("Collided with Health");
-            //TODO: playerManager.AddHealth(other.GetComponent<HealthControllerThing>().increaseAmount);
+            invince = 2f;
+            hp--;
+            FindObjectOfType<UIManager>().TakeDamage(hp);
+            if (hp <= 0)
+            {
+                Die();
+            }
         }
     }
 }

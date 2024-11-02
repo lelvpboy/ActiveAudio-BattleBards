@@ -51,6 +51,11 @@ public class Charger : EnemyController
             lineRenderer.enabled = false;
             ChangeState(22);
         }
+
+        if(state == -1)
+        {
+            currentHealth += 0.5f;
+        }
     }
 
     public void HitCharge()
@@ -95,16 +100,17 @@ public class Charger : EnemyController
                 break;
             case 20:
                 lineRenderer.positionCount = 2;
-                Vector3 dir = targetPosition - transform.position;
+                Vector3 dir = new Vector3(targetPosition.x, transform.position.y, targetPosition.z) - transform.position;
                 dir.Normalize();
                 lineRenderer.SetPosition(0, transform.position);
                 lineRenderer.SetPosition(1, transform.position + dir * chargeRange);
+                transform.forward = dir;
                 break;
             case 21:
 
                 break;
             case 22:
-                transform.position = Vector3.Lerp(transform.position, lineRenderer.GetPosition(1), chargeSpeed);
+                transform.position = Vector3.Lerp(transform.position, lineRenderer.GetPosition(1), chargeSpeed * Time.deltaTime);
                 float dist = Vector3.Distance(transform.position, lineRenderer.GetPosition(1));
                 if(dist <= 0.1)
                 {
@@ -129,7 +135,7 @@ public class Charger : EnemyController
                 if(other.tag == "Player")
                 {
                     chargeCooldownRemaining = chargeCooldown;
-                    HitCharge();
+                    //HitCharge();
                 }
                 if(other.tag == "Wall")
                 {

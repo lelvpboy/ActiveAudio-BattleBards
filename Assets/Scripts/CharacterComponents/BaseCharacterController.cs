@@ -8,7 +8,7 @@ public class BaseCharacterController : MonoBehaviour
     [Header("Base Variables")]
     public float maxHealth;
     public NavMeshAgent pathfindingController;
-    public float strength;
+    public float score;
     public float attackingDistance;
     public LayerMask wallLayers;
     //[SerializeField] private BaseWeapon currentWeapon
@@ -40,6 +40,13 @@ public class BaseCharacterController : MonoBehaviour
     public virtual void ChangeState(int _state)
     {
         state = _state;
+    }
+
+    public void Die()
+    {
+        UIManager manager = FindObjectOfType<UIManager>();
+        manager.score += score * manager.combo;
+        Destroy(gameObject);
     }
 
 
@@ -82,6 +89,8 @@ public class BaseCharacterController : MonoBehaviour
     public virtual void Move()
     {
         pathfindingController.SetDestination(targetPosition);
+        Vector3 dir = new Vector3(targetPosition.x, transform.position.y, targetPosition.z) - transform.position;
+        transform.forward = dir;
     }
 
     public virtual void Attack()
@@ -95,6 +104,10 @@ public class BaseCharacterController : MonoBehaviour
         if(currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
+        }
+        if(currentHealth <= 0)
+        {
+            Die();
         }
     }
 
