@@ -98,8 +98,12 @@ public class BaseCharacterController : MonoBehaviour
 
     }
 
+    public SFXPlayer hitSFX;
+
     public void ChangeHP(float amount)
     {
+        hitSFX.PlayClip();
+
         currentHealth += amount;
         if(currentHealth > maxHealth)
         {
@@ -198,5 +202,13 @@ public class BaseCharacterController : MonoBehaviour
             }
         }
         return foundPoint;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Hitbox"))
+        {
+            ChangeHP(-1f);
+        }
     }
 }

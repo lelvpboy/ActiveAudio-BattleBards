@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     float x;
     float y;
 
+    [SerializeField] private SFXPlayer[] sfx;
+
 
     private void Start()
     {
@@ -70,6 +72,11 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 movement = new Vector3(x, 0, y) * (speed * Time.fixedDeltaTime);
 
+        if(movement.magnitude >= 0.1f)
+        {
+            sfx[0].PlayClip();
+        }
+
         rb.velocity = movement;
     }
 
@@ -85,6 +92,7 @@ public class PlayerController : MonoBehaviour
             //TODO: Make this work
             invince = 2f;
             hp--;
+            sfx[1].PlayClip();
             FindObjectOfType<UIManager>().TakeDamage(hp);
             if (hp <= 0)
             {

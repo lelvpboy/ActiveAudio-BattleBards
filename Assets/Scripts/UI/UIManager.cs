@@ -20,11 +20,14 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        comboText.text = "x" + combo.ToString();
-        scoreText.text = score.ToString();
+        if(comboText != null)
+        {
+            comboText.text = "x" + combo.ToString();
+            scoreText.text = score.ToString();
 
-        comboEndText.text = "Combo: " + combo.ToString();
-        scoreEndText.text = "Score: " + score.ToString();
+            comboEndText.text = "x" + combo.ToString();
+            scoreEndText.text = score.ToString();
+        }
     }
 
     public void End()
