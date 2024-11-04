@@ -18,12 +18,11 @@ public class PlayerController : MonoBehaviour
 
     float dashLeft;
 
-    private string targetAnimation = "isIdle";
-    private string newTargetAnimation = "isIdle";
-
-    private Animator animator;
-    private Vector2 inputDirection;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Transform sprite;
     private Rigidbody rb;
+
+    bool facingLeft;
 
     float x;
     float y;
@@ -37,6 +36,12 @@ public class PlayerController : MonoBehaviour
         hp = 3;
     }
 
+    public void Flip()
+    {
+        facingLeft = !facingLeft;
+        sprite.Rotate(new Vector3(0, 180, 0));
+    }
+
     void Update()
     {
         dashLeft -= Time.deltaTime;
@@ -46,8 +51,20 @@ public class PlayerController : MonoBehaviour
         x = Input.GetAxis("Horizontal");
         y = Input.GetAxis("Vertical");
 
+        if(x < 0 && !facingLeft)
+        {
+            Flip();
+        }
+
+        if (x > 0 && facingLeft)
+        {
+            Flip();
+        }
+
         if (Input.GetKeyDown(KeyCode.Space) && dashLeft <= 0)
         {
+            animator.SetTrigger("Dash");
+
             rb.velocity = new Vector3(x, 0, y) * (dodgeSpeed) * Time.fixedDeltaTime;
             dashLeft = dashTime;
 
@@ -75,6 +92,11 @@ public class PlayerController : MonoBehaviour
         if(movement.magnitude >= 0.1f)
         {
             sfx[0].PlayClip();
+            animator.SetBool("Moving", true);
+        }
+        else
+        {
+            animator.SetBool("Moving", false);
         }
 
         rb.velocity = movement;

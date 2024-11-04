@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/EnemyTest/EnemyTest.unity
     guid: 3901c1a50ad43614291ac20b22b569b5
+  - enabled: 1
+    path: Assets/EnemyTest/NightMap.unity
+    guid: 232472b761f6aad4b8e2bd873fb592a5
   m_configObjects: {}

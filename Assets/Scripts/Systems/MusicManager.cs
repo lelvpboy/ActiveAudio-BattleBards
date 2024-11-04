@@ -8,13 +8,25 @@ public class MusicManager : MonoBehaviour
     public int beat;
 
     [SerializeField] private float bpm;
+    [SerializeField] private float timeSig = 4;
+    [SerializeField] private float requiredCombo = 3;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource luteAudioSource;
     [SerializeField] private Intervals[] intervals;
     [SerializeField] private AudioSO[] audios;
 
+    UIManager uiman;
+
     private void Start()
     {
+        uiman = FindObjectOfType<UIManager>();
         SetAudio(0);
+    }
+
+    public void StopAll()
+    {
+        audioSource.Stop();
+        luteAudioSource.Stop();
     }
 
     public void SetAudio(int index)
@@ -23,10 +35,13 @@ public class MusicManager : MonoBehaviour
         bpm = audios[index].bpm;
         audioSource.clip = audios[index].clip;
         audioSource.Play();
+        luteAudioSource.Play();
     }
 
     private void Update()
     {
+        luteAudioSource.volume = Mathf.Clamp(uiman.combo / requiredCombo, 0, 1); 
+
         //Debug:
 
         //if (Input.GetKeyDown(KeyCode.Space))
@@ -59,7 +74,7 @@ public class MusicManager : MonoBehaviour
     public void NextBeat()
     {
         beat++;
-        if (beat > 4)
+        if (beat > timeSig)
         {
             beat = 1;
         }

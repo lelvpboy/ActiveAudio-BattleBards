@@ -210,6 +210,8 @@ MonoBehaviour:
   invince: 0
   dodgeSpeed: 800
   dashTime: 0.3
+  animator: {fileID: 3508337485795071350}
+  sprite: {fileID: 3508337485795071348}
   sfx:
   - {fileID: 2185613837101056030}
   - {fileID: 7893321578814675149}
@@ -233,6 +235,7 @@ MonoBehaviour:
   - {fileID: 3995399708503687601}
   trigger: {fileID: 4581494277711802446}
   orient: {fileID: 4652186411259117071}
+  animator: {fileID: 3508337485795071350}
   sfx:
   - {fileID: 7853050807747241415}
   - {fileID: 7853050807747241415}

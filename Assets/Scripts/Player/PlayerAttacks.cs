@@ -11,6 +11,8 @@ public class PlayerAttacks : MonoBehaviour
     public AnimTrigger trigger;
     public Transform orient;
 
+    [SerializeField] private Animator animator;
+
     Vector3 mousePos;
 
     [SerializeField] private SFXPlayer[] sfx;
@@ -27,6 +29,7 @@ public class PlayerAttacks : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             sfx[1].PlayClip();
+            animator.SetTrigger("Ranged");
 
             if (FindObjectOfType<MusicManager>().WithinBeatRange(0.35f))
             {
@@ -43,6 +46,8 @@ public class PlayerAttacks : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Melee();
+
+            animator.SetTrigger("Melee");
         }
         Vector3 dir = mousePos - new Vector3(transform.position.x, mousePos.y, transform.position.z);
         orient.forward = dir;

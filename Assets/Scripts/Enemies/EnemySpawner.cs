@@ -18,7 +18,7 @@ public class EnemySpawner : MonoBehaviour
             {
                 Instantiate(EnemyPrefabs[Random.Range(0, EnemyPrefabs.Length)], transform.position, Quaternion.identity);
             }
-            spawns += 0.25f;
+            spawns += 0.2f;
         }
     }
 }

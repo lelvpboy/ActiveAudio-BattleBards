@@ -9,6 +9,8 @@ public class Charger : EnemyController
     [SerializeField] private float chargeSpeed;
     [SerializeField] private float chargeCooldown;
 
+    [SerializeField] private Animator animator;
+
     LineRenderer lineRenderer;
     float chargeCooldownRemaining;
 
@@ -30,6 +32,8 @@ public class Charger : EnemyController
         float distance = Vector3.Distance(transform.position, targetPosition);
         if (distance <= chargeRange && state == 0 && chargeCooldownRemaining <= 0)
         {
+            animator.SetTrigger("Charge");
+
             lineRenderer.enabled = true;
             ChangeState(20);
             pathfindingController.enabled = false;
@@ -48,6 +52,8 @@ public class Charger : EnemyController
     {
         if(state == 21)
         {
+            animator.SetTrigger("Launch");
+
             lineRenderer.enabled = false;
             ChangeState(22);
         }
@@ -63,12 +69,14 @@ public class Charger : EnemyController
         float distance = Vector3.Distance(transform.position, targetPosition);
         if (distance <= chargeRange && chargeCooldownRemaining <= 0)
         {
+            animator.SetTrigger("Reset");
             lineRenderer.enabled = true;
             ChangeState(20);
             pathfindingController.enabled = false;
         }
         else
         {
+            animator.SetTrigger("Land");
             ChangeState(23);
         }
     }

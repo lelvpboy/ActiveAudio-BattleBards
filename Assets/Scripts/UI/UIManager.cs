@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
 {
     public GameObject[] Hearts;
     public int combo;
+    public int maxCombo;
     public float score;
 
     public TextMeshProUGUI comboText;
@@ -20,12 +21,17 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        if(combo > maxCombo)
+        {
+            maxCombo = combo;
+        }
+
         if(comboText != null)
         {
             comboText.text = "x" + combo.ToString();
             scoreText.text = score.ToString();
 
-            comboEndText.text = "x" + combo.ToString();
+            comboEndText.text = "x" + maxCombo.ToString();
             scoreEndText.text = score.ToString();
         }
     }
@@ -33,6 +39,7 @@ public class UIManager : MonoBehaviour
     public void End()
     {
         endScreen.SetActive(true);
+        FindObjectOfType<MusicManager>().StopAll();
         Time.timeScale = 0f;
     }
 
